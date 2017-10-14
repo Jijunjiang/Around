@@ -7,6 +7,8 @@ import ( elastic "gopkg.in/olivere/elastic.v3"
 	"log"
 	"reflect"
 	"github.com/pborman/uuid"
+	"context"
+	"cloud.google.com/go/bigtable"
 )
 
 const (
@@ -14,8 +16,8 @@ const (
 	TYPE = "post"
 	DISTANCE = "200km"
 	// Needs to update
-	//PROJECT_ID = "around-xxx"
-	//BT_INSTANCE = "around-post"
+	PROJECT_ID = "around-182907"
+	BT_INSTANCE = "around-post"
 	// Needs to update this URL if you deploy it to cloud.
 	ES_URL = "http://54.245.37.208:9200"
 
@@ -106,6 +108,16 @@ func handlerPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Printf("Post is saved to Index: %s\n", p.Message)
+	 ctx := context.Background()
+      // you must update project name here
+      bt_client, err := bigtable.NewClient(ctx, PROJECT_ID, BT_INSTANCE)
+      if err != nil {
+             panic(err)
+             return
+      }
+
+      // TODO (student questions) save Post into BT as well
+
 }
 
 func handlerSearch(w http.ResponseWriter, r *http.Request) {
